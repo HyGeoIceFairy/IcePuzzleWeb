@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰冰谜07 - CTF Challenge</title>
+    <style>
+        :root {
+            --primary-color: #29b6f6;
+            /* 冰蓝色 */
+            --primary-dark: #0288d1;
+            --bg-color: #e1f5fe;
+            --text-main: #333;
+            --text-secondary: #666;
+            --flavor-color: #546e7a;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        body::before {
+            content: "";
+            position: fixed; /* 即使页面滚动，背景图也固定不动 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* 放在内容的最底层 */
+
+            /* 在这里修改你的图片文件名 */
+            background-image: url('./bgc.jpg'); 
+            
+            /* 图片显示方式：覆盖全屏 */
+            background-size: cover; 
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* 关键点：这里调整透明度 (0.0 到 1.0) */
+            opacity: 0.3; 
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.5);
+            width: 100%;
+            max-width: 700px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .flavor-text {
+            font-family: "Georgia", "Songti SC", serif;
+            font-style: italic;
+            color: var(--flavor-color);
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5fafd;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .description {
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .audio-player {
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 30px;
+        }
+
+        .hints-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .hint-wrapper {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .hint-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .hint-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .hint-content {
+            display: none;
+            /* 默认隐藏 */
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff9c4;
+            /* 提示框稍微醒目一点的黄色背景 */
+            color: #5d4037;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        code {
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- 大标题 -->
+        <h1>冰冰谜07</h1>
+        <!-- 副标题 -->
+        <h2>CTF之音频隐写</h2>
+
+        <!-- 风味文本 -->
+        <blockquote class="flavor-text">
+            “梦总是有会醒来的时候，不会醒的梦总有一天会变成悲伤。”
+        </blockquote>
+
+        <!-- 题目描述 -->
+        <div class="description">
+            <p>这道题目由三个部分拼成，所有部分的答案拼接起来即为最终答案。</p>
+            <p>每个部分都设计了里程碑，您可以尝试提交一部分的答案来验证是否完成该部分。</p>
+            <p>每个部分都有一个提示，如果您难以作答可以开启。<strong>提示顺序即为字符串拼接顺序</strong>，因此请只开启您想要的部分。为了做题过程愉快且完整，推荐尽量不要提前开启答案。</p>
+            <p><strong>答案格式：</strong> <code>cirno{xxxxxxxxxxxx}</code>，每个x对应一个非花括号可打印字符。</p>
+        </div>
+
+        <!-- 音频播放器 -->
+        <div class="audio-player">
+            <!-- 请将 src 修改为您实际的音频文件名 -->
+            <audio controls>
+                <source src="./ToriPuzzle.wav" type="audio/mpeg">
+                您的浏览器不支持 audio 元素，请下载音频文件进行分析。
+            </audio>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee;">
+
+        <!-- 提示按钮区域 -->
+        <div class="hints-section">
+            <div class="hint-wrapper">
+                <button class="hint-btn" onclick="toggleHint('hint1')">Hint 1</button>
+                <div id="hint1" class="hint-content">
+                    <!-- 在这里填写 Hint 1 内容 -->
+                    有一个乐器长长短短嘟嘟响，它是常见的哪种密码？
+                </div>
+            </div>
+
+            <div class="hint-wrapper">
+                <button class="hint-btn" onclick="toggleHint('hint2')">Hint 2</button>
+                <div id="hint2" class="hint-content">
+                    <!-- 在这里填写 Hint 2 内容 -->
+                    ！呀声人段一有里频音
+                </div>
+            </div>
+
+            <div class="hint-wrapper">
+                <button class="hint-btn" onclick="toggleHint('hint3')">Hint 3</button>
+                <div id="hint3" class="hint-content">
+                    <!-- 在这里填写 Hint 3 内容 -->
+                    有一段杂音……该怎么让这段杂音具体呈现在我的眼前呢……
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Good Luck & Have Fun
+        </footer>
+    </div>
+
+    <script>
+        function toggleHint(id) {
+            var hintBox = document.getElementById(id);
+            if (hintBox.style.display === "block") {
+                hintBox.style.display = "none";
+            } else {
+                hintBox.style.display = "block";
+            }
+        }
+    </script>
+</body>
+
+</html>
