@@ -9,18 +9,14 @@
 
         :root {
             --main-blue: #4facfe;
+            --dark-blue: #0072ff;
             --light-blue: #a6c1ee;
             --bg-gradient: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
             --card-bg: #ffffff;
             --text-color: #4a5568;
-            --accent-color: #ff9a9e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
@@ -47,16 +43,11 @@
             width: 100%;
             max-width: 700px;
             border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1);
             padding: 40px;
             text-align: center;
             position: relative;
-            overflow: hidden;
             border: 4px solid #e3f2fd;
-        }
-
-        .title-area {
-            margin-bottom: 20px;
         }
 
         h1 {
@@ -79,16 +70,9 @@
 
         .divider {
             height: 4px;
-            background: repeating-linear-gradient(
-                45deg,
-                var(--light-blue),
-                var(--light-blue) 10px,
-                #fff 10px,
-                #fff 20px
-            );
+            background: repeating-linear-gradient(45deg, var(--light-blue), var(--light-blue) 10px, #fff 10px, #fff 20px);
             margin: 20px auto;
             width: 60%;
-            border-radius: 2px;
         }
 
         .flavor-box {
@@ -121,18 +105,56 @@
             margin-left: 10px;
         }
 
+        
         .puzzle-container {
             margin-top: 30px;
             text-align: left;
         }
         
+        .puzzle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
         .puzzle-label {
             font-size: 0.9rem;
             color: var(--main-blue);
             font-weight: bold;
-            margin-bottom: 8px;
-            display: block;
         }
+
+        .copy-btn {
+            background-color: var(--main-blue);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(79, 172, 254, 0.3);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(79, 172, 254, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn.success {
+            background-color: #48bb78;
+            box-shadow: 0 4px 6px rgba(72, 187, 120, 0.3);
+        }
+
 
         .code-block {
             background: #f1f6ff;
@@ -151,7 +173,6 @@
 
         .code-block:hover {
             border-color: var(--main-blue);
-            box-shadow: 0 0 15px rgba(161, 196, 253, 0.3);
         }
 
         .footer {
@@ -166,11 +187,7 @@
             100% { transform: translateY(0px); }
         }
         
-        .floating-icon {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-
+        .floating-icon { display: inline-block; animation: float 3s ease-in-out infinite; }
     </style>
 </head>
 <body>
@@ -191,9 +208,14 @@
         </div>
 
         <div class="puzzle-container">
-            <span class="puzzle-label">加密数据 / Encrypted Data:</span>
+            <div class="puzzle-header">
+                <span class="puzzle-label">加密数据 / Encrypted Data:</span>
+                <button class="copy-btn" onclick="copyText(this)">
+                    <span>📋</span> 复制文本 / Copy
+                </button>
+            </div>
             
-            <div class="code-block">
+            <div class="code-block" id="code-content">
 Li4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLi0gLS0tLi4gIC4uLS0tIC0tLS0tIC0uLi4uIC0tLS0uICAuLi0tLSAtLS0tLSAtLi4uLiAuICAuLi0tLSAtLS0tLSAtLS4uLiAuLi4uLSAgLi4tLS0gLS0tLS0gLi4uLS0gLi0gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4uLSAuLi0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC4uLS0tIC4tICAuLi0tLSAtLS0tLSAuLi0tLSAuLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC0uLi4uIC0uLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC0uLi4uIC0uLi4=
             </div>
             
@@ -204,5 +226,27 @@ Li4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAg
         </div>
     </div>
 
+    <script>
+        function copyText(btnElement) {
+            const textToCopy = document.getElementById("code-content").innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                
+                const originalContent = btnElement.innerHTML;
+                
+                btnElement.classList.add("success");
+                btnElement.innerHTML = "<span>✨</span> 已复制! / Copied!";
+                
+                setTimeout(() => {
+                    btnElement.classList.remove("success");
+                    btnElement.innerHTML = originalContent;
+                }, 2000);
+
+            }).catch(err => {
+                console.error('无法复制: ', err);
+                alert("复制失败，请手动复制！");
+            });
+        }
+    </script>
 </body>
 </html>
