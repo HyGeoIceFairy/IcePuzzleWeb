@@ -14,6 +14,11 @@
             --bg-gradient: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
             --card-bg: #ffffff;
             --text-color: #4a5568;
+            
+            /* 状态颜色 */
+            --success-color: #48bb78;
+            --warning-color: #ed8936;
+            --error-color: #f56565;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,14 +103,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .flavor-text {
-            font-style: italic;
-            color: #5d4037;
-            font-size: 0.95rem;
-            margin-left: 10px;
-        }
-
-        
         .puzzle-container {
             margin-top: 30px;
             text-align: left;
@@ -131,7 +128,6 @@
             padding: 5px 12px;
             border-radius: 15px;
             font-size: 0.8rem;
-            font-family: 'Nunito', sans-serif;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(79, 172, 254, 0.3);
             transition: all 0.2s ease;
@@ -139,22 +135,8 @@
             align-items: center;
             gap: 5px;
         }
-
-        .copy-btn:hover {
-            background-color: var(--dark-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(79, 172, 254, 0.4);
-        }
-
-        .copy-btn:active {
-            transform: translateY(0);
-        }
-
-        .copy-btn.success {
-            background-color: #48bb78;
-            box-shadow: 0 4px 6px rgba(72, 187, 120, 0.3);
-        }
-
+        .copy-btn:hover { background-color: var(--dark-blue); transform: translateY(-2px); }
+        .copy-btn.success { background-color: var(--success-color); }
 
         .code-block {
             background: #f1f6ff;
@@ -166,13 +148,98 @@
             color: #2d3748;
             word-break: break-all;
             white-space: pre-wrap;
-            max-height: 400px;
+            max-height: 250px; /* 稍微调小一点高度给下方腾位置 */
             overflow-y: auto;
             transition: all 0.3s ease;
+            margin-bottom: 25px;
         }
 
-        .code-block:hover {
+        /* --- 新增：答题区域样式 --- */
+        .answer-section {
+            border-top: 2px solid #edf2f7;
+            padding-top: 20px;
+            text-align: left;
+        }
+
+        .format-hint {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 10px;
+            background: #edf2f7;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .flag-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .flag-input:focus {
             border-color: var(--main-blue);
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+        }
+
+        .submit-btn {
+            background-image: var(--bg-gradient);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 172, 254, 0.3);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        /* 反馈框样式 */
+        .result-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            display: none; /* 默认隐藏 */
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-success {
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            color: #2f855a;
+        }
+        .result-milestone {
+            background-color: #fffff0;
+            border: 1px solid #feebc8;
+            color: #c05621;
+        }
+        .result-error {
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
         }
 
         .footer {
@@ -186,7 +253,6 @@
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
-        
         .floating-icon { display: inline-block; animation: float 3s ease-in-out infinite; }
     </style>
 </head>
@@ -215,10 +281,25 @@
                 </button>
             </div>
             
+            <!-- 【重要】请将您的长文本粘贴在下面 -->
             <div class="code-block" id="code-content">
-Li4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi4uIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4gIC4uLS0tIC0tLS0tIC4uLi0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLi0tIC0uLS4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi4uLiAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4uLS0gLS4tLiAgLi4tLS0gLS0tLS0gLi4uLi4gLS4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS0tLS0gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0uLi4gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAtLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuICAuLi0tLSAtLS0tLSAuLi4tLSAtLi0uICAuLi0tLSAtLS0tLSAuLi0tLSAtLS0tLSAgLi4tLS0gLS0tLS0gLi4uLi0gLS0tLi4gIC4uLS0tIC0tLS0tIC0uLi4uIC0tLS0uICAuLi0tLSAtLS0tLSAtLi4uLiAuICAuLi0tLSAtLS0tLSAtLS4uLiAuLi4uLSAgLi4tLS0gLS0tLS0gLi4uLS0gLi0gIC4uLS0tIC0tLS0tIC4uLS0tIC0tLS0tICAuLi0tLSAtLS0tLSAuLi4uLSAuLi0tLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC4uLS0tIC4tICAuLi0tLSAtLS0tLSAuLi0tLSAuLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC0uLi4uIC0uLi4uICAuLi0tLSAtLS0tLSAuLi0tLSAuLSAgLi4tLS0gLS0tLS0gLi4tLS0gLi0gIC4uLS0tIC0tLS0tIC0uLi4uIC0uLi4=
+Vm0wd2QyUXlVWGxWV0d4V1YwZDRWMVl3WkRSV01WbDNXa2M1VjAxWFVqQlZSbEnTWV
+d4T2FGSnPhR2hXYWxaV1ltdHdVRll5TVZWWGJFcHBWMFpTVjFaV2JETlhhMUpUVmp
+BeFYySkVUQmRVV0d4T1lXeHdhazVzV25OalJtUllZbFZhY2xWc1ZrZFdia0p4VjJ0
+P......... (在这里粘贴您的题目内容)
             </div>
-            
+
+            <!-- 答题区域 -->
+            <div class="answer-section">
+                <div class="format-hint">🔑 答案格式: cirno{xxx}</div>
+                <div class="input-group">
+                    <input type="text" class="flag-input" id="flagInput" placeholder="在此输入Flag..." onkeypress="handleEnter(event)">
+                    <button class="submit-btn" onclick="checkFlag()">提交 / Submit</button>
+                </div>
+                
+                <!-- 结果反馈框 -->
+                <div id="resultArea" class="result-box"></div>
+            </div>
         </div>
 
         <div class="footer">
@@ -227,23 +308,90 @@ Li4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAgLi4tLS0gLS0tLS0gLi4tLS0gLS4uLiAg
     </div>
 
     <script>
+        // ============================================================
+        // 【配置区域 / Configuration Area】
+        // 请在此处修改正确答案和里程碑提示
+        // ============================================================
+
+        // 1. 设置正确的 Flag (完全匹配)
+        const CORRECT_FLAG = "cirno{u_r_p4t13nt}"; 
+
+        // 2. 设置里程碑 (Key是用户可能输入的中间步骤，Value是给用户的提示)
+        // 这里的 Key 必须是字符串，建议小写
+        const MILESTONES = {
+            "..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- .  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ..--- -----  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ...-- -.-.  ..--- ----- ..--- -----  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ..--- -----  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- .  ..--- ----- ..--- -----  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ...-- .  ..--- ----- ..--- -..  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ..--- -..  ..--- ----- ..--- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -----  ..--- ----- ...-- -.-.  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..... -...  ..--- ----- ..--- -..  ..--- ----- ..--- -----  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ...-- -.-.  ..--- ----- ..... -..  ..--- ----- ..--- -----  ..--- ----- ...-- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -----  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- -...  ..--- ----- ..--- .  ..--- ----- ...-- -.-.  ..--- ----- ..--- -----  ..--- ----- ....- ---..  ..--- ----- -.... ----.  ..--- ----- -.... .  ..--- ----- --... ....-  ..--- ----- ...-- .-  ..--- ----- ..--- -----  ..--- ----- ....- ..---  ..--- ----- ..--- .-  ..--- ----- ..--- .-  ..--- ----- ..--- .-  ..--- ----- ..--- .-  ..--- ----- -.... -....  ..--- ----- ..--- .-  ..--- ----- ..--- .-  ..--- ----- -.... -...": "第一步答对了！", 
+            "2b%202b%202b%202b%202b%2020%202b%202b%202b%202b%205b%2020%202d%203e%202b%202b%202b%2020%202b%202b%202b%202b%202b%2020%202b%203c%205d%203e%202b%2020%202b%202b%202b%202b%202b%2020%202b%202b%202b%202b%202b%2020%202b%202b%202b%202b%202b%2020%202b%202b%202e%202b%202b%2020%202b%202b%202b%202b%202e%2020%202b%202b%202b%202b%202b%2020%202b%202b%202b%202b%202e%2020%202d%202d%202d%202d%202e%2020%202b%202e%203c%202b%202b%2020%202b%205b%202d%203e%202b%2020%202b%202b%203c%205d%203e%2020%202b%202b%202b%202e%202d%2020%202d%202d%202d%202d%202d%2020%202e%203c%202b%202b%202b%2020%202b%205b%202d%203e%202d%2020%202d%202d%202d%203c%205d%2020%203e%202d%202d%202d%202d%2020%202d%202d%202e%203c%202b%2020%202b%202b%202b%205b%202d%2020%203e%202b%202b%202b%202b%2020%203c%205d%203e%202b%202b%2020%202b%202e%203c%202b%202b%2020%202b%202b%205b%202d%203e%2020%202d%202d%202d%202d%203c%2020%205d%203e%202d%202d%202d%2020%202e%203c%202b%202b%202b%2020%202b%205b%202d%203e%202b%2020%202b%202b%202b%203c%205d%2020%203e%202b%202e%203c%202b%2020%202b%202b%202b%202b%202b%2020%202b%205b%202d%203e%202d%2020%202d%202d%202d%202d%202d%2020%202d%203c%205d%203e%202d%2020%202d%202d%202d%202d%202d%2020%202d%202d%202d%202d%202d%2020%202e%203c%202b%202b%202b%2020%202b%202b%202b%202b%202b%2020%205b%202d%203e%202b%202b%2020%202b%202b%202b%202b%202b%2020%202b%203c%205d%203e%202e%2020%203c%202b%202b%202b%202b%2020%202b%202b%202b%202b%205b%2020%202d%203e%202d%202d%202d%2020%202d%202d%202d%202d%202d%2020%203c%205d%203e%202d%202d%2020%202d%202e%202b%202b%202e%2020%203c%202b%202b%202b%202b%2020%202b%202b%202b%205b%202d%2020%203e%202b%202b%202b%202b%2020%202b%202b%202b%203c%205d%2020%203e%202b%202b%202b%202b%2020%202b%202b%202b%202b%202b%2020%202b%202e%202b%202b%202b%2020%202b%202b%202b%202e%202b%2020%202b%202b%202b%202b%202b%2020%202b%202b%202b%202e%203c%2020%2048%2069%206e%2074%203a%2020%2042%202a%202a%202a%202a%2066%202a%202a%206b": "第二步答对了！",
+            "2b 2b 2b 2b 2b 20 2b 2b 2b 2b 5b 20 2d 3e 2b 2b 2b 20 2b 2b 2b 2b 2b 20 2b 3c 5d 3e 2b 20 2b 2b 2b 2b 2b 20 2b 2b 2b 2b 2b 20 2b 2b 2b 2b 2b 20 2b 2b 2e 2b 2b 20 2b 2b 2b 2b 2e 20 2b 2b 2b 2b 2b 20 2b 2b 2b 2b 2e 20 2d 2d 2d 2d 2e 20 2b 2e 3c 2b 2b 20 2b 5b 2d 3e 2b 20 2b 2b 3c 5d 3e 20 2b 2b 2b 2e 2d 20 2d 2d 2d 2d 2d 20 2e 3c 2b 2b 2b 20 2b 5b 2d 3e 2d 20 2d 2d 2d 3c 5d 20 3e 2d 2d 2d 2d 20 2d 2d 2e 3c 2b 20 2b 2b 2b 5b 2d 20 3e 2b 2b 2b 2b 20 3c 5d 3e 2b 2b 20 2b 2e 3c 2b 2b 20 2b 2b 5b 2d 3e 20 2d 2d 2d 2d 3c 20 5d 3e 2d 2d 2d 20 2e 3c 2b 2b 2b 20 2b 5b 2d 3e 2b 20 2b 2b 2b 3c 5d 20 3e 2b 2e 3c 2b 20 2b 2b 2b 2b 2b 20 2b 5b 2d 3e 2d 20 2d 2d 2d 2d 2d 20 2d 3c 5d 3e 2d 20 2d 2d 2d 2d 2d 20 2d 2d 2d 2d 2d 20 2e 3c 2b 2b 2b 20 2b 2b 2b 2b 2b 20 5b 2d 3e 2b 2b 20 2b 2b 2b 2b 2b 20 2b 3c 5d 3e 2e 20 3c 2b 2b 2b 2b 20 2b 2b 2b 2b 5b 20 2d 3e 2d 2d 2d 20 2d 2d 2d 2d 2d 20 3c 5d 3e 2d 2d 20 2d 2e 2b 2b 2e 20 3c 2b 2b 2b 2b 20 2b 2b 2b 5b 2d 20 3e 2b 2b 2b 2b 20 2b 2b 2b 3c 5d 20 3e 2b 2b 2b 2b 20 2b 2b 2b 2b 2b 20 2b 2e 2b 2b 2b 20 2b 2b 2b 2e 2b 20 2b 2b 2b 2b 2b 20 2b 2b 2b 2e 3c 20 48 69 6e 74 3a 20 42 2a 2a 2a 2a 66 2a 2a 6b": "第三步答对了！",
+            "+++++ ++++[ ->+++ +++++ +<]>+ +++++ +++++ +++++ ++.++ ++++. +++++ ++++. ----. +.<++ +[->+ ++<]> +++.- ----- .<+++ +[->- ---<] >---- --.<+ +++[- >++++ <]>++ +.<++ ++[-> ----< ]>--- .<+++ +[->+ +++<] >+.<+ +++++ +[->- ----- -<]>- ----- ----- .<+++ +++++ [->++ +++++ +<]>. <++++ ++++[ ->--- ----- <]>-- -.++. <++++ +++[- >++++ +++<] >++++ +++++ +.+++ +++.+ +++++ +++.<": "第四步答对了！"
+        };
+
+        // ============================================================
+        // 【逻辑区域 / Logic Area】 (以下代码通常不需要修改)
+        // ============================================================
+
+        function checkFlag() {
+            const inputEl = document.getElementById('flagInput');
+            const resultEl = document.getElementById('resultArea');
+            let userVal = inputEl.value.trim(); // 去除首尾空格
+
+            if (!userVal) {
+                showResult("请输入一点内容再提交吧~", "error");
+                return;
+            }
+
+            // 1. 检查是否完全正确
+            if (userVal === CORRECT_FLAG) {
+                showResult("✨ 恭喜！答案正确！请私聊此方bot提交flag！", "success");
+                return;
+            }
+
+            // 2. 检查里程碑 (检查是否存在于配置对象中)
+            if (MILESTONES.hasOwnProperty(userVal)) {
+                showResult("🚩 " + MILESTONES[userVal] + " (继续加油！)", "milestone");
+                return;
+            }
+
+            // 3. 错误答案
+            showResult("❌ 答案错误。再试一次？", "error");
+        }
+
+        // 显示结果的辅助函数
+        function showResult(msg, type) {
+            const el = document.getElementById('resultArea');
+            el.style.display = 'block';
+            el.className = 'result-box'; // 重置类
+            
+            if (type === 'success') {
+                el.classList.add('result-success');
+                el.innerHTML = "<b>CORRECT!</b><br>" + msg;
+            } else if (type === 'milestone') {
+                el.classList.add('result-milestone');
+                el.innerHTML = "<b>MILESTONE REACHED!</b><br>" + msg;
+            } else {
+                el.classList.add('result-error');
+                el.innerText = msg;
+            }
+        }
+
+        // 回车键提交
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                checkFlag();
+            }
+        }
+
+        // 复制功能
         function copyText(btnElement) {
             const textToCopy = document.getElementById("code-content").innerText;
-            
             navigator.clipboard.writeText(textToCopy).then(() => {
-                
                 const originalContent = btnElement.innerHTML;
-                
                 btnElement.classList.add("success");
-                btnElement.innerHTML = "<span>✨</span> 已复制! / Copied!";
-                
+                btnElement.innerHTML = "<span>✨</span> 已复制!";
                 setTimeout(() => {
                     btnElement.classList.remove("success");
                     btnElement.innerHTML = originalContent;
                 }, 2000);
-
             }).catch(err => {
-                console.error('无法复制: ', err);
                 alert("复制失败，请手动复制！");
             });
         }
