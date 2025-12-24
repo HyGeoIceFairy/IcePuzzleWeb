@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰冰谜09 - 雪夜的无声告白</title>
+    <style>
+        /* --- 全局字体与背景设置 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Mountains+of+Christmas:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+
+            /* 背景图：第一层是渐变，第二层是图片 */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('09bg.png');
+
+            /* 这里也要对应两层：第一层(渐变)cover，第二层(图片)cover */
+            background-size: cover, cover;
+
+            /* 【关键修改】分别设置位置 */
+            /* 第一层(黑色渐变)不动(0 0)，第二层(图片)往上提(center -100px) */
+            background-position: 0 0, center -100px;
+
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+
+            color: #fff;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- 动态雪花效果 --- */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: 0 0 1px #000;
+            user-select: none;
+            z-index: 1;
+            pointer-events: none;
+            animation-name: fall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0vh) translateX(0px);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        /* --- 主容器 --- */
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* --- 标题区域 --- */
+        .main-title {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px #74ebd5;
+            letter-spacing: 5px;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: #a8c0ff;
+            font-weight: 300;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        /* --- 谜题卡片 (磨砂玻璃风格) --- */
+        .puzzle-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(3px);
+            /* 磨砂效果 */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: left;
+            position: relative;
+        }
+
+        /* 圣诞装饰点缀 */
+        .puzzle-card::before {
+            content: "❄️";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0.5;
+        }
+
+        .puzzle-h3 {
+            font-size: 2rem;
+            margin: 0;
+            color: #E0EAFC;
+        }
+
+        .puzzle-h4 {
+            font-family: 'Mountains of Christmas', cursive;
+            /* 英文手写风 */
+            font-size: 1.5rem;
+            margin: 5px 0 30px 0;
+            color: #CFDEF3;
+            opacity: 0.8;
+        }
+
+        /* --- 剧情文本 --- */
+        .flavor-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #74ebd5;
+        }
+
+        .sayuri {
+            color: #ffcccc;
+            /* 佐祐理的台词颜色 */
+            font-weight: bold;
+        }
+
+        .narrator {
+            color: #ddd;
+        }
+
+        /* --- 下载按钮 --- */
+        .download-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            /* 圣诞红 */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(221, 36, 118, 0.6);
+        }
+
+        /* --- Hint 区域 --- */
+        .hints-container {
+            margin-top: 40px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+        }
+
+        .hint-box {
+            margin: 10px 0;
+        }
+
+        summary {
+            cursor: pointer;
+            color: #74ebd5;
+            font-weight: bold;
+            list-style: none;
+            /* 隐藏默认箭头 */
+        }
+
+        summary::after {
+            content: " 🔒 (点击查看)";
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        details[open] summary::after {
+            content: " 🔓";
+        }
+
+        .hint-content {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        /* --- 音乐控制 --- */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid #fff;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        code {
+            /* 核心：设置等宽字体，Consolas 是 Windows 常用，Monaco 是 Mac 常用 */
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+
+            /* 视觉优化：深色背景，亮色文字 */
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #74ebd5;
+            /* 青色高亮，很有极客感 */
+
+            /* 边框和间距 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(116, 235, 213, 0.3);
+
+            /* 字体大小微调 */
+            font-size: 0.9em;
+            letter-spacing: 0;
+            /* 代码不需要字间距 */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 背景音乐：请将你的音乐文件命名为 bgm.mp3 并放在同一目录下 -->
+    <!-- 由于浏览器限制，通常需要用户交互后才能自动播放 -->
+    <audio id="bgm" loop>
+        <!-- 将 source 改为你实际上传的文件名，例如 kanon_bgm.mp3 -->
+        <source src="bgm.mp3" type="audio/mpeg">
+        您的浏览器不支持 audio 标签。
+    </audio>
+
+    <div class="music-control" onclick="toggleMusic()" title="播放/暂停音乐">
+        🎵
+    </div>
+
+    <div class="container">
+        <h1 class="main-title">冰冰谜09</h1>
+        <h2 class="sub-title">文本隐写</h2>
+
+        <div class="puzzle-card">
+            <h3 class="puzzle-h3">雪夜的无声告白</h3>
+            <h4 class="puzzle-h4">Silent Snow</h4>
+
+            <div class="flavor-text">
+                <p class="narrator">
+                    平安夜的学校走廊里，窗外正飘着鹅毛大雪。<br>
+                    你远远看见那个拿着剑的少女正站在窗边，旁边还有她那位总是微笑着的好朋友。</p>
+
+                <p class="narrator">见你走近，开朗的少女笑着迎了上来。</p>
+
+                <p class="sayuri">“啊哈哈，晚上好呀。舞似乎有东西想交给你呢。”</p>
+
+                <p class="narrator">川澄舞依旧沉默着，她并没有说话，只是默默地递给你一张折叠得整整齐齐的信纸，然后转身看向了窗外的雪景。</p>
+
+                <p class="sayuri">“啊哈哈，舞还是这么害羞呢。请一定要读懂她的心意哦。”</p>
+
+                <p class="narrator">你打开了信纸，上面只有寥寥几行字……但是，在这无言的雪夜里，真的只有这些吗？</p>
+
+                <p class="narrator">雪，能隐藏着什么呢……</p>
+            </div>
+
+            <div class="download-section">
+                <!-- 请确保你的题目附件名为 challenge.txt 或 mai_letter.txt 并放在同一目录 -->
+                <a href="./challenge.txt" download="mai_letter.txt" class="download-btn">
+                    🎁 接收舞的信件 (点击下载)
+                </a>
+            </div>
+
+            <div class="hints-container">
+                <p style="opacity: 0.6; font-size: 0.9rem;">需要帮忙吗？佐祐理好像有话想说...</p>
+
+                <details class="hint-box">
+                    <summary>Hint 1 我毫无头绪</summary>
+                    <div class="hint-content">
+                        舞的话很少，但信纸似乎比看起来要“重”一些？<br>
+                        试着在文本编辑器里<strong>全选 (Ctrl+A)</strong> 文字，看看行尾有没有什么奇怪的地方。
+                    </div>
+                </details>
+
+                <details class="hint-box">
+                    <summary>Hint 2 该如何提取</summary>
+                    <div class="hint-content">
+                        本题目背景基于《Kanon》，它的常用中文译名为“雪之少女”。<br>
+                        而题目名和风味文本也多次暗示了用雪隐写。<br>
+                        说到 <strong>雪 (Snow)</strong>，有一种专门利用空白字符进行隐写的同名工具...
+                    </div>
+                </details>
+
+                <details class="hint-box">
+                    <summary>Hint 3 我已经知道隐写方法了，但是我没看懂怎么破译啊！</summary>
+                    <div class="hint-content">
+                        请你到<code>https://darkside.com.au/snow/</code>下载所需脚本。<br>
+                        鉴于大家可能都是Windows系统，请直接找到<code>snwdos32.zip</code>下载解压，在终端输入命令即可。<br>
+                        命令参考：<code>snow -C xxx.txt</code><br>
+                        如果还不行就找大模型帮帮你吧！
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 音乐控制脚本 ---
+        const bgm = document.getElementById('bgm');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgm.pause();
+                isPlaying = false;
+                document.querySelector('.music-control').style.opacity = '0.5';
+            } else {
+                bgm.play().then(() => {
+                    isPlaying = true;
+                    document.querySelector('.music-control').style.opacity = '1';
+                }).catch(e => console.log("请先与页面交互以播放音频"));
+            }
+        }
+
+        // 尝试页面加载后自动播放（部分浏览器可能会拦截，所以保留了右下角按钮）
+        window.addEventListener('click', function () {
+            if (!isPlaying) {
+                toggleMusic();
+            }
+        }, { once: true });
+
+
+        // --- 雪花生成脚本 ---
+        function createSnow() {
+            const snowCount = 50; // 雪花数量
+            for (let i = 0; i < snowCount; i++) {
+                const snow = document.createElement('div');
+                snow.className = 'snowflake';
+                snow.innerHTML = '❄';
+
+                // 随机位置和动画属性
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5秒落下
+                snow.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snow.style.opacity = Math.random();
+                snow.style.animationDelay = Math.random() * 5 + 's';
+
+                document.body.appendChild(snow);
+            }
+        }
+
+        createSnow();
+    </script>
+</body>
+
+</html>
