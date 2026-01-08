@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冰冰谜10 - CTF Challenge</title>
+    <style>
+        :root {
+            --primary-blue: #29b6f6;
+            --deep-blue: #0277bd;
+            --ice-white: rgba(255, 255, 255, 0.85);
+            --code-bg: #1e293b;
+            --text-main: #334155;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: 0 0 1px #000;
+            animation: fall linear infinite;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) translateX(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background: var(--ice-white);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--deep-blue);
+            font-size: 3em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-weight: 300;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+
+        .story-section {
+            background: rgba(255, 255, 255, 0.5);
+            border-left: 5px solid var(--primary-blue);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: var(--deep-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        h3::before {
+            content: '❄';
+            margin-right: 10px;
+            color: var(--primary-blue);
+        }
+
+        .math-box {
+            background: #e1f5fe;
+            padding: 15px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px dashed var(--deep-blue);
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            color: #a5b3ce;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            word-break: break-all;
+        }
+
+        .variable {
+            color: #f07178;
+        }
+
+        .number {
+            color: #c3e88d;
+        }
+
+        .comment {
+            color: #546e7a;
+            font-style: italic;
+        }
+
+        .hints {
+            margin-top: 30px;
+        }
+
+        details {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid #b3e5fc;
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--deep-blue);
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 1.2em;
+        }
+
+        details[open] summary::after {
+            content: '-';
+        }
+
+        details[open] summary {
+            background-color: #e1f5fe;
+        }
+
+        .hint-content {
+            padding: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.8em;
+            color: #78909c;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .cirno-class {
+            margin-top: 40px;
+            border-top: 2px dashed #b3e5fc;
+            padding-top: 20px;
+        }
+
+        .cirno-class summary {
+            background: linear-gradient(90deg, #4fc3f7, #29b6f6);
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            justify-content: center;
+            border: none;
+            box-shadow: 0 4px 10px rgba(41, 182, 246, 0.3);
+            font-size: 1.1em;
+        }
+
+        .cirno-class summary::after {
+            content: '';
+            margin-left: 10px;
+        }
+
+        .cirno-class summary:hover {
+            transform: translateY(-2px);
+            transition: 0.2s;
+        }
+
+        .class-content {
+            background: #e1f5fe;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            position: relative;
+            border: 2px solid #81d4fa;
+        }
+
+        .dialogue h4 {
+            color: #01579b;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .lesson-block {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-block h5 {
+            margin: 0 0 10px 0;
+            color: #0277bd;
+            font-size: 1.1em;
+            border-bottom: 2px solid #b3e5fc;
+            display: inline-block;
+        }
+
+        .math-inline {
+            background: #29b6f6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .secret-scroll {
+            border: 2px dashed #f48fb1;
+            background: #fff0f5;
+        }
+
+        .bow {
+            width: 0;
+            height: 0;
+            border-left: 20px solid #29b6f6;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            transform: rotate(-15deg);
+        }
+
+        .bow::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-right: 20px solid #29b6f6;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            position: absolute;
+            left: 2px;
+            top: -15px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            for (let i = 0; i < 30; i++) {
+                let snow = document.createElement('div');
+                snow.className = 'snowflake';
+                snow.innerHTML = '❄';
+                snow.style.left = Math.random() * 100 + 'vw';
+                snow.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                snow.style.opacity = Math.random();
+                snow.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                document.body.appendChild(snow);
+            }
+        });
+    </script>
+
+    <div class="container">
+        <header>
+            <h1>冰冰谜 10</h1>
+            <h2>CTF 之非对称加密</h2>
+        </header>
+
+        <main>
+            <div class="story-section">
+                <h3>奇怪的身份证</h3>
+                <p>
+                    琪露诺在雾之湖畔捡到了一张神秘的身份证，上面的号码是标准的 <strong>18 位数字</strong>。
+                    作为最强的妖精，她敏锐地发现这个 ID 号码蕴含着魔力，它并不是随机生成的，而可以被这样质因数分解：
+                </p>
+                <div class="math-box">
+                    ID = 2<sup>r</sup> × s × t
+                </div>
+                <p>
+                    琪露诺为了考考你，将 s 和 t 分别藏在了两个 RSA 谜题中。
+                    只有解开谜题，找出 s 和 t，按公式组合，才能得到最终的 Flag。
+                </p>
+                <p style="font-weight: bold; color: var(--deep-blue);">
+                    Flag 格式：cirno{ID} (即还原后的18位ID)
+                </p>
+            </div>
+
+            <h3>🔒 RSA 题目</h3>
+
+            <div class="code-block">
+                # ---------------- Part 1: Find s ----------------<br>
+                # The exponent is unusually large...<br>
+                N1 =
+                116702217978146602128173689090166993337176352956979618777061562262940986240029967402153277151166311640678331672476195574435263792695012209372537632814258799288953982614025902870200404144931634729366634675534675755289794140165917030101680129718230607792865599349930303140744532866167872466968669054239806488473<br>
+                e1 =
+                102158699137890895126616631603486063802083239071421408259451107284846400491138420655692781543705215524038296856999721079888640108402082796556118779379801161931585949735940169186898600987311368205792784952721990519584968869982781715703928793372419887733047855865410546547704246650319574368930746130793163725745<br>
+                c1 =
+                48703461961995655489468586574799563141645698813163274716826673140304747135684227783429359476985744333873820416437815728785495758961748425712410228977828721456834287677352962060705249325078687586066129853947070945161626728456921237172004557572698384172302698476975622370513077282839761187220758828612188904671<br>
+
+                # ---------------- Part 2: Find t ----------------<br>
+                # Two modulus generated at the same time...<br>
+                N2 =
+                109828612612338364224140678138681553446177305161432996376860592663252385707595330588811136637127466116219923839120758352774442930300059997087835771078623057018898975098298587674276348428812139581840708692442149689030745818494075091552554475130244627728039856568356312600500171470171296803690228832618149961693<br>
+                N3 =
+                139711526054164893580799676981622714474865010975403234432228040182484833729872667485211162012941366739752734451830261930032423284968082040802238917438334136352896086505653686842145511471511153079267010884686977370657895805083451085263668197244063489640083109317673139572817629194777161189048356808149817378777<br>
+                e2 = 65537<br>
+                c2 =
+                67304970598704489753252956871570667821452688985945798888413988553248479341156030509770744961092095528371531899128455252187642287302979325955118909165746793278394734100448314889971010675361860485958236667354682000128209847602452339767156593735647154678687811984294618984100360234832256552531809431401497507826
+            </div>
+
+            <div class="hints">
+                <h3>💡 Hints</h3>
+
+                <details>
+                    <summary>提示 1：关于 s 的获取</summary>
+                    <div class="hint-content">
+                        在第一部分中，模数 N1 是正常的，但是公钥 e1 非常大（接近 N1 的大小）。<br>
+                        在 RSA 中，当 <strong>e 很大</strong>时，往往意味着 <strong>d (私钥) 很小</strong>。<br>
+                        你可以去查阅一下 <em>Wiener's Attack (维纳攻击)</em>。
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提示 2：关于 t 的获取</summary>
+                    <div class="hint-content">
+                        你得到了两个模数 N2 和 N3。<br>
+                        在生成 RSA 密钥时，如果随机数生成器偷懒了，或者为了节省资源，
+                        有时候不同的模数会<strong>共享同一个素数因子</strong>。<br>
+                        试着计算一下 GCD(N2, N3) 看看？
+                    </div>
+                </details>
+
+                <details>
+                    <summary>提示 3：最终的 ID</summary>
+                    <div class="hint-content">
+                        当你拿到 s 和 t 后，别忘了题目一开始给出的公式。<br>
+                        ID = 2^r * s * t<br>
+                        你应当可以根据ID是一个身份证号得到r和ID。
+                    </div>
+                </details>
+            </div>
+        </main>
+
+        <div class="cirno-class">
+            <details>
+                <summary>❄️ 搞不懂 RSA？进来看琪露诺老师的完美算术教室！ ❄️</summary>
+                <div class="class-content">
+                    <div class="avatar">
+                        <div class="bow"></div>
+                    </div>
+                    <div class="dialogue">
+                        <h4>我是天才琪露诺！听好了！</h4>
+                        <p>
+                            哼哼，看来你被这些数字冻住了呢！<br>
+                            既然你诚心诚意地发问了，最强的我就大发慈悲地告诉你 <strong>RSA</strong> 是怎么回事！
+                        </p>
+
+                        <div class="lesson-block">
+                            <h5>1. 两个神奇的素数 (p 和 q)</h5>
+                            <p>
+                                RSA 的魔法核心就是两个大大的素数，我们叫它们 <strong>p</strong> 和 <strong>q</strong>。<br>
+                                把它们乘起来：<span class="math-inline">N = p × q</span>。<br>
+                                这就像把两个雪球捏成了一个巨大的雪人 (N)。别人看到雪人，根本猜不出它原本是哪两个雪球组成的！<br>
+                                <span class="highlight">这就是 RSA 安全的原因：拆雪人（分解 N）太难啦！</span>
+                            </p>
+                        </div>
+
+                        <div class="lesson-block">
+                            <h5>2. 锁和钥匙 (e 和 d)</h5>
+                            <p>
+                                我们要送情报，需要一把锁（公钥 <strong>e</strong>）和一把钥匙（私钥 <strong>d</strong>）。<br>
+                            <ul>
+                                <li><strong>加密：</strong> 用 e 把情报锁进盒子。 <span class="math-inline">c = m^e mod N</span>
+                                </li>
+                                <li><strong>解密：</strong> 用 d 把盒子打开。 <span class="math-inline">m = c^d mod N</span></li>
+                            </ul>
+                            e 和 d 是数学上的一对好朋友，它们满足一个神秘的约定。只要算出 d，你就能成为最强！
+                            </p>
+                        </div>
+
+                        <div class="lesson-block">
+                            <h5>3. 锁和钥匙的秘密约定 (模逆元)</h5>
+                            <p>
+                                e (公钥) 和 d (私钥) 可不是随便选的数字！它们是一对<strong>“模逆元”</strong>。
+                            </p>
+                            <p>
+                                <span class="highlight">关键公式：e × d ≡ 1 (mod φ(N))</span>
+                            </p>
+                            <p
+                                style="border-left: 3px solid #f48fb1; padding-left: 10px; margin-top: 10px; background: rgba(255,255,255,0.5);">
+                                <strong>怎么算 d？</strong><br>
+                                在 Python 里，直接用咒语 <code style="color: #d81b60;">d = inverse(e, phi)</code>，电脑就会帮你算出逆元！
+                            </p>
+                        </div>
+
+                        <p style="text-align: center; font-weight: bold; color: var(--deep-blue);">
+                            懂了吗？快去解开题目，证明你比冰之妖精还聪明吧！<br>
+                            如果还是不会……去让大模型帮帮你解题吧！
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <footer>
+            <p>© Hypergeometry Ice Fairy</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
